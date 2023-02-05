@@ -6,6 +6,9 @@
 	},
 	"builders": [{
 		"type": "azure-arm",
+		"client_id": "{{user `client_id`}}",
+		"client_secret": "{{user `client_secret`}}",
+		"subscription_id": "{{user `subscription_id`}}",
 		"os_type": "Linux",
 		"image_publisher": "Canonical",
 		"image_offer": "UbuntuServer",
@@ -13,7 +16,10 @@
 		"managed_image_resource_group_name": "Ubuntu-RG",
 		"managed_image_name": "ubuntuImage",
 		"location": "North Europe",
-		"vm_size": "Standard_B1s"
+		"vm_size": "Standard_B1s",
+		"azure_tags": {
+			"task": "Deployment"
+		}
 	}],
 	"provisioners": [{
 		"inline": [
