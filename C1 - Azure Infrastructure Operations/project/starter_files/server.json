@@ -10,9 +10,9 @@
 		"image_publisher": "Canonical",
 		"image_offer": "UbuntuServer",
 		"image_sku": "18.04-LTS",
-		"managed_image_resource_group_name": "Ubuntu-rg",
+		"managed_image_resource_group_name": "Ubuntu-RG",
 		"managed_image_name": "ubuntuImage",
-		"location": "Norway East",
+		"location": "North Europe",
 		"vm_size": "Standard_B1s"
 	}],
 	"provisioners": [{
