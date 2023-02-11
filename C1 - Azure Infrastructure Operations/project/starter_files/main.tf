@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "linux-rg" {
-  name     = var.resource_group_name
+  name     = "${var.prefix}-RG"
   location = var.location
   tags = var.tags
 }
@@ -28,10 +28,9 @@ resource "azurerm_network_security_group" "linux-nsg" {
   location = azurerm_resource_group.linux-rg.location
   resource_group_name = azurerm_resource_group.linux-rg.name
 
-  security_rule = [ 
-  {
+  security_rule {
     name = "AllowVnetInbound"
-    priority = 65000
+    priority = 100
     direction = "Inbound"
     access = "Allow"
     protocol = "*"
@@ -39,10 +38,10 @@ resource "azurerm_network_security_group" "linux-nsg" {
     destination_port_range = "*"
     source_address_prefix = "VirtualNetwork"
     destination_address_prefix = "VirtualNetwork"
-  },
-  {
+  }
+  security_rule {
     name = "AllowAzureLoadBalancerInbound"
-    priority = 65001
+    priority = 101
     direction = "Inbound"
     access = "Allow"
     protocol = "*"
@@ -50,10 +49,10 @@ resource "azurerm_network_security_group" "linux-nsg" {
     destination_port_range = "*"
     source_address_prefix = "AzureLoadBalancer"
     destination_address_prefix = "*"
-  },
-  {
+  }
+  security_rule {
     name = "DenyAllInbound"
-    priority = 65500
+    priority = 102
     direction = "Inbound"
     access = "Deny"
     protocol = "*"
@@ -61,10 +60,10 @@ resource "azurerm_network_security_group" "linux-nsg" {
     destination_port_range = "*"
     source_address_prefix = "*"
     destination_address_prefix = "*"
-  },
-  {
+  }
+  security_rule {
     name = "AllowVnetOutbound"
-    priority = 65000
+    priority = 100
     direction = "Outbound"
     access = "Allow"
     protocol = "*"
@@ -72,10 +71,10 @@ resource "azurerm_network_security_group" "linux-nsg" {
     destination_port_range = "*"
     source_address_prefix = "VirtualNetwork"
     destination_address_prefix = "VirtualNetwork"
-  },
-  {
+  }
+  security_rule {
     name = "AllowInternetOutbound"
-    priority = 65001
+    priority = 101
     direction = "Outbound"
     access = "Allow"
     protocol = "*"
@@ -83,10 +82,10 @@ resource "azurerm_network_security_group" "linux-nsg" {
     destination_port_range = "*"
     source_address_prefix = "*"
     destination_address_prefix = "Internet"
-  },
-  {
+  }
+  security_rule {
     name = "DenyAllOutbound"
-    priority = 65500
+    priority = 102
     direction = "Outbound"
     access = "Deny"
     protocol = "*"
@@ -95,8 +94,6 @@ resource "azurerm_network_security_group" "linux-nsg" {
     source_address_prefix = "*"
     destination_address_prefix = "*"
   }
-  ]
-
   tags = var.tags
 }
 
@@ -141,7 +138,7 @@ resource "azurerm_lb_backend_address_pool" "linux-backend-address-pool" {
 resource "azurerm_network_interface_backend_address_pool_association" "linux-nic-bap-association" {
   count = var.counter
   network_interface_id = element(azurerm_network_interface.linux-nic.*.id, count.index)
-  ip_configuration_name = "${var.prefix}-configuration"
+  ip_configuration_name = "internal"
   backend_address_pool_id = azurerm_lb_backend_address_pool.linux-backend-address-pool.id
 }
 
@@ -150,6 +147,14 @@ resource "azurerm_availability_set" "linux-vm-aset" {
   location = azurerm_resource_group.linux-rg.location
   resource_group_name = azurerm_resource_group.linux-rg.name
   tags = var.tags
+}
+
+data "azurerm_resource_group"  "image-rg" {
+  name = var.packer_resource_group
+}
+data "azurerm_image" "packerImage" {
+  name = var.packer_image_name
+  resource_group_name = data.azurerm_resource_group.image-rg.name
 }
 
 resource "azurerm_linux_virtual_machine" "linux-vm" {
@@ -170,7 +175,7 @@ resource "azurerm_linux_virtual_machine" "linux-vm" {
     azurerm_network_interface.linux-nic[count.index].id,
   ]
 
-  source_image_id = "/subscriptions/d9bd30f5-56fc-4a47-8929-d6f11cfbe702/resourceGroups/Ubuntu-RG/providers/Microsoft.Compute/images/ubuntuImage"
+  source_image_id = data.azurerm_image.packerImage.id
 
   os_disk {
     storage_account_type = "Standard_LRS"
@@ -187,4 +192,6 @@ resource "azurerm_managed_disk" "linux-managed-disk" {
   location = azurerm_resource_group.linux-rg.location
   resource_group_name = azurerm_resource_group.linux-rg.name
   storage_account_type = "Standard_LRS"
+  create_option = "Empty"
+  disk_size_gb = var.disk_size
 }

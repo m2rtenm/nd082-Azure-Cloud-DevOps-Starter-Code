@@ -1,11 +1,6 @@
 variable "prefix" {
     description = "User can define a suitable prefix for certain resources"
-    default = "Ubuntu"
-}
-
-variable "resource_group_name" {
-  description = "Resource group name from Packer to match with the resource group name described in Terraform"
-  default = "Ubuntu-RG"
+    default = "Udacity"
 }
 
 variable "location" {
@@ -38,4 +33,19 @@ variable "password" {
 variable "vmsize" {
   description = "Size for the creatable VM"
   default = "Standard_B1s"
+}
+
+variable "disk_size" {
+  description = "Managed disk size gigabytes"
+  default = 5
+}
+
+variable "packer_resource_group" {
+  description = "Name of the resource group in which the Packer image was created"
+  default = "Ubuntu-RG"
+}
+
+variable "packer_image_name" {
+  description = "Name of the Packer image"
+  default = "ubuntuImage"
 }
