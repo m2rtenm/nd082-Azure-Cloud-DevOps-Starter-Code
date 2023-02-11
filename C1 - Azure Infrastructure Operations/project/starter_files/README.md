@@ -36,8 +36,8 @@ terraform destroy (to destroy and remove all the infrastructure)
 
 ### Output
 
-The successful message after building Packer image:
-
+The example of a successful message after building Packer image:
+```
 Build 'azure-arm' finished after 4 minutes 19 seconds.
 
 ==> Wait completed after 4 minutes 19 seconds
@@ -47,9 +47,10 @@ Build 'azure-arm' finished after 4 minutes 19 seconds.
 
 OSType: Linux
 ...
+```
 
 The final rows of successful message after command terraform plan -out solution.plan:
-
+```
 Plan: 20 to add, 0 to change, 0 to destroy.
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -58,9 +59,13 @@ Saved the plan to: solution.plan
 
 To perform exactly these actions, run the following command to apply:
     terraform apply "solution.plan"
+```
 
 The final row of successful command terraform apply "solution.plan":
+```
 Apply complete! Resources: 20 added, 0 changed, 0 destroyed.
-
+```
 The final row of successful command terraform destroy:
+```
 Destroy complete! Resources: 20 destroyed.
+```
