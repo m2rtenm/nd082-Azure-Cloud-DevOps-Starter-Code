@@ -29,69 +29,14 @@ resource "azurerm_network_security_group" "linux-nsg" {
   resource_group_name = azurerm_resource_group.linux-rg.name
 
   security_rule {
-    name = "AllowVnetInbound"
+    name = "DenyInternetInbound"
     priority = 100
-    direction = "Inbound"
-    access = "Allow"
-    protocol = "*"
-    source_port_range = "*"
-    destination_port_range = "*"
-    source_address_prefix = "VirtualNetwork"
-    destination_address_prefix = "VirtualNetwork"
-  }
-  security_rule {
-    name = "AllowAzureLoadBalancerInbound"
-    priority = 101
-    direction = "Inbound"
-    access = "Allow"
-    protocol = "*"
-    source_port_range = "*"
-    destination_port_range = "*"
-    source_address_prefix = "AzureLoadBalancer"
-    destination_address_prefix = "*"
-  }
-  security_rule {
-    name = "DenyAllInbound"
-    priority = 102
     direction = "Inbound"
     access = "Deny"
     protocol = "*"
     source_port_range = "*"
     destination_port_range = "*"
-    source_address_prefix = "*"
-    destination_address_prefix = "*"
-  }
-  security_rule {
-    name = "AllowVnetOutbound"
-    priority = 100
-    direction = "Outbound"
-    access = "Allow"
-    protocol = "*"
-    source_port_range = "*"
-    destination_port_range = "*"
-    source_address_prefix = "VirtualNetwork"
-    destination_address_prefix = "VirtualNetwork"
-  }
-  security_rule {
-    name = "AllowInternetOutbound"
-    priority = 101
-    direction = "Outbound"
-    access = "Allow"
-    protocol = "*"
-    source_port_range = "*"
-    destination_port_range = "*"
-    source_address_prefix = "*"
-    destination_address_prefix = "Internet"
-  }
-  security_rule {
-    name = "DenyAllOutbound"
-    priority = 102
-    direction = "Outbound"
-    access = "Deny"
-    protocol = "*"
-    source_port_range = "*"
-    destination_port_range = "*"
-    source_address_prefix = "*"
+    source_address_prefix = "Internet"
     destination_address_prefix = "*"
   }
   tags = var.tags
