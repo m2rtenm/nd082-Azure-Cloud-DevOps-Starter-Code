@@ -111,8 +111,8 @@ resource "azurerm_linux_virtual_machine" "linux-vm" {
 
   availability_set_id = azurerm_availability_set.linux-vm-aset.id
 
-  admin_username = "${var.username}"
-  admin_password = "${var.password}"
+  admin_username = var.username
+  admin_password = var.password
   disable_password_authentication = false
 
 
@@ -130,7 +130,6 @@ resource "azurerm_linux_virtual_machine" "linux-vm" {
   tags = var.tags
 }
 
-/*võimalik, et on mitu managed diski vaja*/
 resource "azurerm_managed_disk" "linux-managed-disk" {
   count = var.counter
   name = "${var.prefix}-md${count.index}"

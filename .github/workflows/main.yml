@@ -2,9 +2,9 @@ name: CI example
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master/C2-AgileDevelopmentwithAzure/automated_build_exercise/starter_files" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master/C2-AgileDevelopmentwithAzure/automated_build_exercise/starter_files" ]
 
 jobs:
   build:

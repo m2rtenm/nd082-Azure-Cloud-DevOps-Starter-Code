@@ -1,0 +1,5 @@
+terraform plan -out solution.plan
+
+terraform apply "solution.plan"
+
+terraform destroy
